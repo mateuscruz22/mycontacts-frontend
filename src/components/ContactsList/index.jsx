@@ -6,7 +6,7 @@ import arrow from '../../assets/images/arrow.svg'
 import edit from '../../assets/images/edit.svg'
 import trash from '../../assets/images/trash.svg'
 
-export default function ContactsList() {
+export function ContactsList() {
   return (
     <Container>
       <Header>
