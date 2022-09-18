@@ -1,5 +1,6 @@
 import { ThemeProvider } from 'styled-components'
 import { BrowserRouter } from 'react-router-dom'
+import React from 'react'
 import GlobalStyles from '../../assets/styles/global'
 import defaultTheme from '../../assets/themes/default'
 import { Container } from './styles'
@@ -9,13 +10,15 @@ import Routes from '../../Routes'
 function App() {
   return (
     <BrowserRouter>
-      <ThemeProvider theme={defaultTheme}>
-        <GlobalStyles />
-        <Container>
-          <Header />
-          <Routes />
-        </Container>
-      </ThemeProvider>
+      <React.StrictMode>
+        <ThemeProvider theme={defaultTheme}>
+          <GlobalStyles />
+          <Container>
+            <Header />
+            <Routes />
+          </Container>
+        </ThemeProvider>
+      </React.StrictMode>
     </BrowserRouter>
   )
 }
