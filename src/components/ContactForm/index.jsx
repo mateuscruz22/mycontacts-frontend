@@ -3,6 +3,7 @@ import { useState } from 'react'
 import isEmailValid from '../../utils/isEmailValid'
 import { Button } from '../Button'
 import FormGroup from '../FormGroup'
+import useErrors from '../hooks/useErrors'
 import { Input } from '../Input'
 import { Select } from '../Select'
 import { ButtonContainer, Form } from './styles'
@@ -12,18 +13,15 @@ export default function ContactForm({ buttonLabel }) {
   const [email, setEmail] = useState('')
   const [phone, setPhone] = useState('')
   const [category, setCategory] = useState('')
-  const [errors, setErrors] = useState([])
+  const { setError, removeError, getErrorMessageByFielName } = useErrors()
 
   function handleNameChange(value) {
     setName(value)
 
     if (!value) {
-      setErrors((prev) => [...prev, {
-        field: 'name',
-        message: 'Nome é obrigatório.',
-      }])
+      setError({ field: 'name', message: 'Nome é obrigatório.' })
     } else {
-      setErrors((prev) => prev.filter((error) => error.field !== 'name'))
+      removeError({ field: 'name' })
     }
   }
 
@@ -31,14 +29,9 @@ export default function ContactForm({ buttonLabel }) {
     setEmail(value)
 
     if (value && !isEmailValid(value)) {
-      if (!errors.find((error) => error.field === 'email')) {
-        setErrors((prev) => [...prev, {
-          field: 'email',
-          message: 'E-mail inválido.',
-        }])
-      }
+      setError({ field: 'email', message: 'E-mail inválido.' })
     } else {
-      setErrors((prev) => prev.filter((error) => error.field !== 'email'))
+      removeError({ field: 'email' })
     }
   }
 
@@ -52,10 +45,6 @@ export default function ContactForm({ buttonLabel }) {
 
   function handleSubmit(event) {
     event.preventDefault()
-  }
-
-  function getErrorMessageByFielName(fieldName) {
-    return errors.find((error) => error.field === fieldName)?.message
   }
 
   return (
