@@ -1,5 +1,6 @@
 import PropTypes from 'prop-types'
 import { useState } from 'react'
+import isEmailValid from '../../utils/isEmailValid'
 import { Button } from '../Button'
 import FormGroup from '../FormGroup'
 import { Input } from '../Input'
@@ -11,7 +12,7 @@ export default function ContactForm({ buttonLabel }) {
   const [email, setEmail] = useState('')
   const [phone, setPhone] = useState('')
   const [category, setCategory] = useState('')
-  const [erros, setErrors] = useState([])
+  const [errors, setErrors] = useState([])
 
   function handleNameChange(value) {
     setName(value)
@@ -26,10 +27,19 @@ export default function ContactForm({ buttonLabel }) {
     }
   }
 
-  console.log(erros)
-
   function handleEmailChange(value) {
     setEmail(value)
+
+    if (value && !isEmailValid(value)) {
+      if (!errors.find((error) => error.field === 'email')) {
+        setErrors((prev) => [...prev, {
+          field: 'email',
+          message: 'E-mail inválido.',
+        }])
+      }
+    } else {
+      setErrors((prev) => prev.filter((error) => error.field !== 'email'))
+    }
   }
 
   function handlePhoneChange(value) {
@@ -44,23 +54,29 @@ export default function ContactForm({ buttonLabel }) {
     event.preventDefault()
   }
 
+  function getErrorMessageByFielName(fieldName) {
+    return errors.find((error) => error.field === fieldName)?.message
+  }
+
   return (
     <Form onSubmit={(event) => handleSubmit(event)}>
-      <FormGroup>
+      <FormGroup error={getErrorMessageByFielName('name')}>
         <Input
           type="text"
           placeholder="Nome"
           value={name}
           onChange={(event) => handleNameChange(event.target.value)}
+          error={getErrorMessageByFielName('name')}
         />
       </FormGroup>
 
-      <FormGroup>
+      <FormGroup error={getErrorMessageByFielName('email')}>
         <Input
           type="email"
           placeholder="E-mail"
           value={email}
           onChange={(event) => handleEmailChange(event.target.value)}
+          error={getErrorMessageByFielName('email')}
         />
       </FormGroup>
 
