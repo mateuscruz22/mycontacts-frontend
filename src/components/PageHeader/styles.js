@@ -5,7 +5,7 @@ export const Container = styled.div`
 
     a {
         text-decoration: none;
-        display: flex;
+        display: inline-flex;
         align-items: center;
 
         span {
