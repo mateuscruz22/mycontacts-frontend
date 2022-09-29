@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom'
+import { useEffect, useState } from 'react'
 import {
-  Card, Container, Header, InputSearchContainer, ListContainer,
+  Card, Container, Header, InputSearchContainer, ListHeader,
 } from './styles'
 
 import arrow from '../../assets/images/arrow.svg'
@@ -8,38 +9,77 @@ import edit from '../../assets/images/edit.svg'
 import trash from '../../assets/images/trash.svg'
 
 export function Home() {
+  const [contacts, setContacts] = useState([])
+  const [orderBy, setOrderBy] = useState('desc')
+  const [searchTerm, setSearchTerm] = useState('')
+
+  const filteredContacts = contacts.filter((contact) => {
+    const contactName = contact.name.toLowerCase()
+    return contactName.startsWith(searchTerm.toLowerCase())
+  })
+
+  useEffect(() => {
+    (async () => {
+      try {
+        const response = await fetch(`http://localhost:3001/contacts?orderBy=${orderBy}`)
+        setContacts(await response.json())
+      } catch (error) {
+        throw new Error(error.message)
+      }
+    })()
+  }, [orderBy])
+
+  function handleToggleOrderBy() {
+    setOrderBy((prevState) => (prevState === 'asc' ? 'desc' : 'asc'))
+  }
+  function handleChangeSearchTerm(value) {
+    setSearchTerm(value)
+  }
+
   return (
     <Container>
       <InputSearchContainer>
-        <input type="text" placeholder="Pesquise pelo nome..." />
+        <input
+          value={searchTerm}
+          type="text"
+          placeholder="Pesquise pelo nome..."
+          onChange={(event) => handleChangeSearchTerm(event.target.value)}
+        />
       </InputSearchContainer>
 
       <Header>
-        <strong>3 contatos</strong>
+        <strong>
+          {filteredContacts.length}
+          {filteredContacts.length === 1 ? ' contato' : ' contatos'}
+        </strong>
         <Link to="/new">Novo contato</Link>
       </Header>
 
-      <ListContainer>
-        <header>
-          <button className="sortButton" type="button">
+      {filteredContacts.length > 0 && (
+        <ListHeader orderBy={orderBy}>
+          <button className="sortButton" type="button" onClick={handleToggleOrderBy}>
             <span>Nome</span>
 
             <img src={arrow} alt="Arrow" />
           </button>
-        </header>
+        </ListHeader>
+      )}
 
-        <Card>
+      {filteredContacts.map((contact) => (
+        <Card key={contact.id}>
           <div className="info">
             <div className="contact-name">
-              <strong>Mateus Araújo</strong>
-              <small href="/">Instagram</small>
+              <strong>{contact.name}</strong>
+              {contact.category_name && (
+                <small href="/">{contact.category_name}</small>
+              )}
             </div>
-            <span>mateuscruz22@gmail.com</span>
-            <span>(41) 99999-9999</span>
+            <span>{contact.email}</span>
+            <span>{contact.phone}</span>
           </div>
 
           <div className="actions">
-            <Link to="/edit/123">
+            <Link to={`/edit/${contact.id}`}>
               <img src={edit} alt="Edit" />
             </Link>
 
@@ -48,7 +88,7 @@ export function Home() {
             </button>
           </div>
         </Card>
-      </ListContainer>
+      ))}
     </Container>
   )
 }
