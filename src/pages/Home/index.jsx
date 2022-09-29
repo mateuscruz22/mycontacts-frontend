@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom'
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import {
   Card, Container, Header, InputSearchContainer, ListHeader,
 } from './styles'
@@ -13,10 +13,10 @@ export function Home() {
   const [orderBy, setOrderBy] = useState('desc')
   const [searchTerm, setSearchTerm] = useState('')
 
-  const filteredContacts = contacts.filter((contact) => {
+  const filteredContacts = useMemo(() => contacts.filter((contact) => {
     const contactName = contact.name.toLowerCase()
     return contactName.startsWith(searchTerm.toLowerCase())
-  })
+  }), [contacts, searchTerm])
 
   useEffect(() => {
     (async () => {
