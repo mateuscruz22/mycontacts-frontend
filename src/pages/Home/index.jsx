@@ -8,10 +8,14 @@ import arrow from '../../assets/images/arrow.svg'
 import edit from '../../assets/images/edit.svg'
 import trash from '../../assets/images/trash.svg'
 
+import Loader from '../../components/Loader'
+import ContactsService from '../../services/ContactsService'
+
 export function Home() {
   const [contacts, setContacts] = useState([])
   const [orderBy, setOrderBy] = useState('desc')
   const [searchTerm, setSearchTerm] = useState('')
+  const [isLoading, setIsLoading] = useState(true)
 
   const filteredContacts = useMemo(() => contacts.filter((contact) => {
     const contactName = contact.name.toLowerCase()
@@ -21,10 +25,15 @@ export function Home() {
   useEffect(() => {
     (async () => {
       try {
-        const response = await fetch(`http://localhost:3001/contacts?orderBy=${orderBy}`)
-        setContacts(await response.json())
+        setIsLoading(true)
+
+        const contactsList = await ContactsService.listContacts(orderBy)
+
+        setContacts(contactsList)
       } catch (error) {
         throw new Error(error.message)
+      } finally {
+        setIsLoading(false)
       }
     })()
   }, [orderBy])
@@ -38,6 +47,8 @@ export function Home() {
 
   return (
     <Container>
+      <Loader isLoading={isLoading} />
+
       <InputSearchContainer>
         <input
           value={searchTerm}
