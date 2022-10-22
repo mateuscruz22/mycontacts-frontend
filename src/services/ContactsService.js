@@ -1,10 +1,16 @@
+import HttpClient from './utils/HttpClient'
+
 class ContactsService {
+  constructor() {
+    this.HttpClient = new HttpClient('http://localhost:3001')
+  }
+
   async listContacts(orderBy = 'desc') {
-    const response = await fetch(`http://localhost:3001/contacts?orderBy=${orderBy}`)
+    return this.HttpClient.get(`/contacts?orderBy=${orderBy}`)
+  }
 
-    const json = await response.json()
-
-    return json
+  async createContact(contact) {
+    return this.HttpClient.post('/contacts', contact)
   }
 }
 
