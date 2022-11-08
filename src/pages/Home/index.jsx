@@ -20,7 +20,7 @@ import sad from '../../assets/images/sad.svg'
 import emptyBox from '../../assets/images/empty-box.svg'
 import magnifierQuestion from '../../assets/images/magnifier-question.svg'
 
-import { Button } from '../../components/Button'
+import Button from '../../components/Button'
 
 import Loader from '../../components/Loader'
 import ContactsService from '../../services/ContactsService'
