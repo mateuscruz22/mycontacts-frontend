@@ -2,20 +2,21 @@ import { useCallback } from 'react'
 import ContactForm from '../../components/ContactForm'
 import { PageHeader } from '../../components/PageHeader'
 import ContactsService from '../../services/ContactsService'
+import toast from '../../utils/toast'
 
 export function NewContact() {
   const handleSubmit = useCallback(async (formData) => {
     try {
-      const response = await ContactsService.createContact({
+      await ContactsService.createContact({
         name: formData.name,
         email: formData.email,
         phone: formData.phone,
         category_id: formData.categoryId,
       })
 
-      console.log(response)
+      toast('success', 'Contato cadastrado com sucesso!')
     } catch (error) {
-      alert(error)
+      toast('danger', 'Ocorreu um erro ao cadastrar o contato!')
     }
   }, [])
 
