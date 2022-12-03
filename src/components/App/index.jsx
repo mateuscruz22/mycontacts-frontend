@@ -1,6 +1,6 @@
 import { ThemeProvider } from 'styled-components'
 import { BrowserRouter } from 'react-router-dom'
-import React, { StrictMode } from 'react'
+import React from 'react'
 import GlobalStyles from '../../assets/styles/global'
 import defaultTheme from '../../assets/themes/default'
 import { Container } from './styles'
@@ -11,18 +11,16 @@ import ToastContainer from '../Toast/ToastContainer'
 function App() {
   return (
     <BrowserRouter>
-      <StrictMode>
-        <ThemeProvider theme={defaultTheme}>
-          <GlobalStyles />
+      <ThemeProvider theme={defaultTheme}>
+        <GlobalStyles />
 
-          <ToastContainer />
+        <ToastContainer />
 
-          <Container>
-            <Header />
-            <Routes />
-          </Container>
-        </ThemeProvider>
-      </StrictMode>
+        <Container>
+          <Header />
+          <Routes />
+        </Container>
+      </ThemeProvider>
     </BrowserRouter>
   )
 }

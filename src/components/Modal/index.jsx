@@ -1,6 +1,7 @@
 import PropTypes from 'prop-types'
 import ReactDOM from 'react-dom'
 import Button from '../Button'
+import ReactPortal from '../ReactPortal'
 import Spinner from '../Spinner'
 import { Container, Overlay, Footer } from './styles'
 
@@ -18,6 +19,8 @@ export default function Modal({
   if (!visible) {
     return null
   }
+
+  const container = ReactPortal('modal-root')
 
   return ReactDOM.createPortal(
     <Overlay>
@@ -48,7 +51,7 @@ export default function Modal({
         </Footer>
       </Container>
     </Overlay>,
-    document.getElementById('modal-root'),
+    container,
   )
 }
 

@@ -11,6 +11,7 @@ import { Select } from '../Select'
 import { ButtonContainer, Form } from './styles'
 import CategoriesService from '../../services/CategoriesService'
 import Button from '../Button'
+import toast from '../../utils/toast'
 
 const ContactForm = forwardRef(({ buttonLabel, onSubmit }, ref) => {
   const [name, setName] = useState('')
@@ -52,7 +53,7 @@ const ContactForm = forwardRef(({ buttonLabel, onSubmit }, ref) => {
 
         setCategories(categoriesList)
       } catch {
-        console.error('Error getting categories')
+        toast('danger', 'Ocorreu um error ao buscar as categorias')
       } finally {
         setIsLoadingCategories(false)
       }

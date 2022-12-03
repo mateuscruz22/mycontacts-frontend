@@ -24,7 +24,6 @@ import Button from '../../components/Button'
 import Modal from '../../components/Modal'
 import Loader from '../../components/Loader'
 import ContactsService from '../../services/ContactsService'
-import APIError from '../../errors/APIError'
 import toast from '../../utils/toast'
 
 export function Home() {
@@ -51,14 +50,8 @@ export function Home() {
       setContacts(contactsList)
 
       setHasError(false)
-    } catch (error) {
+    } catch {
       setHasError(true)
-
-      if (error instanceof APIError) {
-        console.error(`${error.name}: ${error.message}`)
-      } else {
-        console.error(error)
-      }
     } finally {
       setIsLoading(false)
     }
