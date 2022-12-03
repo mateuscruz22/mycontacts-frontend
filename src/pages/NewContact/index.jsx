@@ -19,7 +19,7 @@ export function NewContact() {
       contactFormRef.current.resetFields()
 
       toast('success', 'Contato cadastrado com sucesso!')
-    } catch (error) {
+    } catch {
       toast('danger', 'Ocorreu um erro ao cadastrar o contato!')
     }
   }, [])
