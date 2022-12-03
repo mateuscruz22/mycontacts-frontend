@@ -10,6 +10,7 @@ import { PageHeader } from '../../components/PageHeader'
 import ContactsService from '../../services/ContactsService'
 import Loader from '../../components/Loader'
 import toast from '../../utils/toast'
+import useSafeAsyncAction from '../../hooks/useSafeAsyncAction'
 
 export function EditContact() {
   const [isLoading, setIsloading] = useState(true)
@@ -17,23 +18,29 @@ export function EditContact() {
   const { id } = useParams()
   const history = useHistory()
   const contactFormRef = useRef(null)
+  const safeAsyncAction = useSafeAsyncAction()
 
   useEffect(() => {
     (async function loadContact() {
       try {
         const contact = await ContactsService.getContactById(id)
 
-        contactFormRef.current.setFieldsValue(contact)
+        safeAsyncAction(() => {
+          contactFormRef.current.setFieldsValue(contact)
 
-        setIsloading(false)
-        setContactName(contact.name)
+          setIsloading(false)
+
+          setContactName(contact.name)
+        })
       } catch {
-        history.push('/')
+        safeAsyncAction(() => {
+          history.push('/')
 
-        toast('danger', 'Contato não encontrado!')
+          toast('danger', 'Contato não encontrado!')
+        })
       }
     }())
-  }, [id, history])
+  }, [id, history, safeAsyncAction])
 
   const handleSubmit = useCallback(async (formData) => {
     try {
